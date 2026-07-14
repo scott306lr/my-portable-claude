@@ -218,6 +218,12 @@ assert_has   "prints the source" "$OUT" "acme/foo-mkt"
 assert_has   "keeps the autoUpdate flag" "$OUT" '"autoUpdate": true'
 assert_lacks "skips machine-local directory sources" "$OUT" "local-mkt"
 
+section "sync.sh gate survives a symlinked repo path"
+ln -s "$CLONE" "$WORK/clone-alias"
+run "$HC" "$WORK/clone-alias" ./sync.sh --dry-run
+assert_eq    "exits 0" 0 "$CODE"
+assert_lacks "no false unlinked complaints" "$OUT" "is not linked"
+
 section "sync.sh works when invoked through a symlink (sync-claude)"
 ln -s "$CLONE/sync.sh" "$WORK/sync-claude"
 run "$HC" "$WORK" "$WORK/sync-claude" --dry-run

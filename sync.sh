@@ -25,7 +25,7 @@ set -euo pipefail
 # script still finds the repo when invoked from anywhere.
 SELF="${BASH_SOURCE[0]}"
 [ -L "$SELF" ] && SELF="$(readlink "$SELF")"
-cd "$(dirname "$SELF")"
+cd -P "$(dirname "$SELF")"   # -P: a symlinked path would make the gate's $PWD comparison false-fail
 
 CLAUDE_HOME="${CLAUDE_HOME:-$HOME/.claude}"   # overridable to test against a throwaway HOME
 DRY_RUN=false

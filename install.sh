@@ -20,7 +20,7 @@
 #      enabledPlugins in dotfiles/settings.json expects
 
 set -euo pipefail
-REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"   # -P: register/link the real path, not a symlinked alias
 CLAUDE_HOME="${CLAUDE_HOME:-$HOME/.claude}"   # overridable to test against a throwaway HOME
 cd "$REPO"   # so relative paths (dotfiles/, .claude-plugin/) work from anywhere
 

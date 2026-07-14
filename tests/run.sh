@@ -51,6 +51,19 @@ for item in dotfiles plugins .claude-plugin install.sh sync.sh README.md .gitign
 done
 (
   cd "$CLONE" || exit 1
+  # Normalize to template state: on an adopted repo the catalog owner is
+  # personalized, which would arm the machine-2 guard and skew every adopt
+  # scenario. The suite always exercises first-adoption behavior.
+  python3 - <<'EOF'
+import json
+path = ".claude-plugin/marketplace.json"
+with open(path) as f:
+    mp = json.load(f)
+mp.setdefault("owner", {})["name"] = "your-name"
+with open(path, "w") as f:
+    json.dump(mp, f, indent=2)
+    f.write("\n")
+EOF
   git init -q -b main
   git config user.email test@example.com
   git config user.name "test suite"

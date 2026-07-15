@@ -5,20 +5,7 @@
 #   ./sync.sh "added pdf skill"  # sync with a custom message
 #   ./sync.sh --dry-run          # run the checks, show what would change, write nothing
 #
-# What it does (data flows machine → repo → other machines):
-#   0. Stops if install.sh hasn't wired up the dotfile symlinks
-#   1. Pulls latest changes (rebase, autostash)
-#   2. Bumps the version of each plugin whose content changed
-#   3. Warns if a marketplace registered on this machine is missing from
-#      extraKnownMarketplaces in dotfiles/settings.json — that key is the
-#      single record of marketplace sources (see docs/adr/0001)
-#   4. Refuses to commit if a changed file contains something that looks
-#      like a secret (token patterns, private-key blocks)
-#   5. Commits + pushes everything that changed
-#   6. Refreshes Claude Code's cached copy of this repo's marketplace
-#
-# Memory/settings need no extra step — they're symlinked, so editing
-# ~/.claude/CLAUDE.md or settings.json already edits this repo.
+# What a run does: README § "What a sync run does".
 
 set -euo pipefail
 # Resolve through the optional ~/.local/bin/sync-claude symlink so the

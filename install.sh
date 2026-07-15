@@ -72,13 +72,6 @@ PLUGINS=($(python3 -c 'import json; [print(p["name"]) for p in json.load(open(".
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 
-mtime_of() {  # human-readable mtime, portable best-effort (GNU / BSD / fallback)
-  date -r "$1" '+%Y-%m-%d %H:%M' 2>/dev/null \
-    || stat -c '%y' "$1" 2>/dev/null | cut -d. -f1 \
-    || stat -f '%Sm' "$1" 2>/dev/null \
-    || echo "unknown"
-}
-
 link_file() {  # symlink dotfiles/<name> → ~/.claude/<name>, with confirm + backup
   # <name> may be a file or a directory — both link, back up, and prune the same.
   local name="$1"
@@ -104,11 +97,8 @@ link_file() {  # symlink dotfiles/<name> → ~/.claude/<name>, with confirm + ba
   if [ -e "$dest" ] || [ -L "$dest" ]; then
     if [ -L "$dest" ]; then
       echo "⚠ $dest is a symlink to: $(readlink "$dest")"
-    elif [ -d "$dest" ]; then
-      # shellcheck disable=SC2012  # counting entries; exotic names don't matter
-      echo "⚠ $dest is an existing directory ($(ls "$dest" | wc -l | tr -d ' ') entries, modified $(mtime_of "$dest"))"
     else
-      echo "⚠ $dest is an existing file ($(wc -c < "$dest") bytes, modified $(mtime_of "$dest"))"
+      echo "⚠ $dest already exists"
     fi
 
     if [ "$AUTO_YES" = true ]; then

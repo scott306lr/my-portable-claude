@@ -45,9 +45,7 @@ once aborted `install.sh` halfway — both classes are caught here now.
 - `~/.claude/plugins/known_marketplaces.json` is **undocumented** Claude Code
   internal state. Only the drift check reads it, tolerantly, and nothing here
   ever writes it. Expect it to change shape across CLI versions.
-- Plugin cache staleness is keyed on the `plugin.json` **version string**,
-  not git SHAs — that's why `sync.sh` auto-bumps versions for changed
-  plugins. Don't remove the bump without understanding that.
-- `extraKnownMarketplaces` in user settings does **not** auto-register
-  marketplaces (verified 2026-07-14, CLI v2.1.207 — see ADR-0001);
-  `install.sh`'s registration loop is load-bearing.
+- Plugin cache staleness is keyed on the `plugin.json` **version string** —
+  don't remove `sync.sh`'s auto-bump (see ADR-0001).
+- `extraKnownMarketplaces` does **not** auto-register marketplaces;
+  `install.sh`'s registration loop is load-bearing (see ADR-0001).

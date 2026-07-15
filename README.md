@@ -75,10 +75,9 @@ Adoption commits nothing. Review with `git diff`, then publish with
 Let `--adopt` run that first sync itself and it prints the exact clone
 commands for your other machines.
 
-Starting fresh, with no existing setup? Plain `./install.sh` works
-as-is; the template's defaults are functional without any editing. And if
-you run plain `./install.sh` on a machine that *does* have an existing
-setup, it notices and reminds you about `--adopt` before touching anything.
+No existing setup? Plain `./install.sh` works as-is — and on a machine
+that *does* have one, it reminds you about `--adopt` before touching
+anything.
 
 ## Why not just a dotfiles repo?
 
@@ -86,14 +85,11 @@ A plain dotfiles setup (chezmoi, stow, bare-git `~/.claude`) syncs the
 files fine, but Claude Code keeps state outside the files:
 
 - Plugins are served from a cache keyed on the `plugin.json` version
-  string, not git SHAs. Syncing an edited skill as a plain file leaves
-  other machines loading the stale cached copy until the version changes.
-  The sync script bumps the version automatically when plugin content
-  changes.
+  string, not git SHAs — a synced skill edit stays stale on other
+  machines until the version changes.
 - Marketplace registration is machine-local state, and
   `extraKnownMarketplaces` in settings does not auto-register on a fresh
-  machine (verified — `docs/adr/0001`). `install.sh` registers what the
-  settings declare; the sync script warns about drift.
+  machine (verified — `docs/adr/0001`).
 
 The repo uses two mechanisms:
 
@@ -115,12 +111,11 @@ through normal use — no setup phase:
   the repo file.
 - **Settings**: change them in Claude Code as usual; they land in the repo
   the same way.
-- **Skills**: a skill is a folder holding a `SKILL.md` — YAML frontmatter
-  (`name`, `description`), then instructions. Put it in `dotfiles/skills/`
-  to invoke it as `/name`, or in `plugins/my-toolkit/skills/` for
-  `/my-toolkit:name`. See `skills/sync-claude/` for a working example.
-  Add `disable-model-invocation: true` for skills only the user should
-  trigger (a "slash command").
+- **Skills**: a folder holding a `SKILL.md` — see
+  `plugins/my-toolkit/skills/sync-claude/` for the format. Put it in
+  `dotfiles/skills/` to invoke as `/name`, or in
+  `plugins/my-toolkit/skills/` for `/my-toolkit:name`. Add
+  `disable-model-invocation: true` for user-only skills ("slash commands").
 
 Prefer different names than `my-tools`/`my-toolkit`? Rename them once in
 `.claude-plugin/marketplace.json` and `plugins/` before the first install —
@@ -184,18 +179,12 @@ broken marketplaces from their recorded sources.
 > Don't commit secrets, even to a private repo. The scan gate is a
 > tripwire, not permission to be careless.
 
-## Support
-
-CI runs the test suite and shellcheck on macOS and Linux. Windows works via
-WSL; native Windows is untested (symlinks + bash).
-
 ## Development
 
-`./tests/run.sh` — plain bash, no framework, no network; everything runs
-against scratch homes and a scratch git clone. Ground rules are in
-[CONTRIBUTING.md](./CONTRIBUTING.md); design decisions, including the
-verified findings about Claude Code's undocumented plugin internals, are in
-[docs/adr/](./docs/adr/).
+`./tests/run.sh` runs the suite; ground rules are in
+[CONTRIBUTING.md](./CONTRIBUTING.md), design decisions in
+[docs/adr/](./docs/adr/). CI covers macOS and Linux; Windows works via
+WSL (native is untested — symlinks + bash).
 
 ## License
 

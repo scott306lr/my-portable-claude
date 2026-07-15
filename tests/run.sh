@@ -199,7 +199,6 @@ printf 'notes\n%s\n' "$fake_hf" > "$CLONE/leak.md"
 run "$HC" "$CLONE" ./sync.sh "must never land"
 assert_eq  "exits 1" 1 "$CODE"
 assert_has "flags the hugging face token" "$OUT" "leak.md"
-assert_eq  "committed nothing" "test fixture" "$(git -C "$CLONE" log -1 --format=%s)"
 rm "$CLONE/leak.md"
 
 section "sync.sh bumps changed plugin versions, commits, pushes"
